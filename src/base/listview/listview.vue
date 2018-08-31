@@ -6,10 +6,10 @@
           class="listview"
           ref="listview">
     <ul>
-      <li v-for="group in data" class="list-group" ref="listGroup">
+      <li :key="group.id" v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
-          <li @click="selectItem(item)" v-for="item in group.items" class="list-group-item">
+          <li :key="item.id" @click="selectItem(item)" v-for="item in group.items" class="list-group-item">
             <img class="avatar" v-lazy="item.avatar">
             <span class="name">{{item.name}}</span>
           </li>
@@ -18,7 +18,7 @@
     </ul>
     <div class="list-shortcut" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
-        <li v-for="(item, index) in shortcutList" :data-index="index" class="item"
+        <li :key="index" v-for="(item, index) in shortcutList" :data-index="index" class="item"
             :class="{'current':currentIndex===index}">{{item}}
 
         </li>
@@ -45,7 +45,9 @@ export default {
   props: {
     data: {
       type: Array,
-      default: []
+      default: function () {
+        return []
+      }
     }
   },
   computed: {
