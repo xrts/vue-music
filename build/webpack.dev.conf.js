@@ -52,7 +52,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     before(app) {
       app.get('/api/getDiscList', function (req, res) {
-        var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+        let url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
         axios.get(url, {
           headers: {
             referer: 'https://c.y.qq.com/',
@@ -101,9 +101,28 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).catch((e) => {
           console.log(e)
         })
+      }),
+      app.get('/api/getSongList', function (req, res) {
+        let url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+        axios.get(url, {
+          headers: {
+            referer: `https://y.qq.com/n/yqq/playsquare`,
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          var ret = response.data
+          if (typeof ret === 'string') {
+            var reg = /^\w+\(/
+            ret = ret.replace(reg, '')
+            ret = ret.substring(0,ret.length-1)
+            ret = JSON.parse(ret)
+          }
+          res.json(ret)
+        }).catch((e) => {
+          console.log(e)
+        })
       })
-
-
     }
   },
   plugins: [
