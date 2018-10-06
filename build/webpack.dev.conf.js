@@ -122,6 +122,27 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).catch((e) => {
           console.log(e)
         })
+      }),
+      app.get('/api/getSearchList', function (req, res) {
+        let url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+        axios.get(url, {
+          headers: {
+            referer: `https://y.qq.com`,
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          var ret = response.data
+          if (typeof ret === 'string') {
+            var reg = /^\w+\(/
+            ret = ret.replace(reg, '')
+            ret = ret.substring(0,ret.length-1)
+            ret = JSON.parse(ret)
+          }
+          res.json(ret)
+        }).catch((e) => {
+          console.log(e)
+        })
       })
     }
   },
